@@ -80,10 +80,8 @@ def nothing(x):
 def scan_from_cam():
     global file_name
     frame = np.zeros((300,512,3), np.uint8)
-    
     ref_ids = set()  # for no duplicate ref_ids
     cam = cv2.VideoCapture(0)  # cam port id usaually 1 or 0
-
     windowName = 'scan id'
     cv2.namedWindow(windowName)
     cv2.createTrackbar('to_close_window_btn', windowName, 0, 1, nothing)
@@ -97,7 +95,6 @@ def scan_from_cam():
         try:
             refNo = data[0].data.decode('utf8')
             ref_ids.add(str(refNo))
-            #print(refNo)
             # add countor box
             for coords in data:
                 (x, y, w, h) = coords.rect
@@ -157,7 +154,6 @@ opt_menu_week = OptionMenu(window, weekVal, *weeks,command=selectYearEvent)
 opt_menu_week.grid(column=3, row=0)
 #----------------------end select week-----------------------------------------
 
-
 #------------------- exit btn------------------------------------
 exit_btn = Button(window, text="Exit",
                   command=window.destroy, height=10, width=10)
@@ -167,7 +163,6 @@ exit_btn.grid(column=2, row=1)
 
 def upload_to_cloud():
     global file_name, course_lbl
-    
     try:
         yr = opt_year.get()
         crs = courses_listBox.get(courses_listBox.curselection())
@@ -186,9 +181,12 @@ def upload_to_cloud():
                     location.document(fi).set({week: 1})
                     d = f.readline()
         
+    except TclError as err:
+        messagebox.showinfo("Error", "please select courses")
     except Exception as err:
         #print('check you\' internet connection')
         print(err)
+            
     
 
 #------------------- upload btn------------------------------------
